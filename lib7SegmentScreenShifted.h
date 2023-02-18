@@ -8,7 +8,7 @@
 
 #if !(defined(NUMBERS_ONLY) || defined(ALPHANUMERIC_ONLY))
     #define _CHAR_SEARCH_STRING_LENGTH_ 49
-    const char PROGMEM _CHAR_SEARCH_STRING_[] = " -.0123456789ABCDEFGHIJLNOPRSTUYÀÁÂÃÄÅÇÈËÍÎÏÐÑÓ×Ý";
+    const char PROGMEM _CHAR_SEARCH_STRING_[] = " -.0123456789ABCDEFGHIJLNOPRSTUYï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
 #elif (!defined NUMBERS_ONLY) && (defined ALPHANUMERIC_ONLY)
     #define _CHAR_SEARCH_STRING_LENGTH_ 32
     const char PROGMEM _CHAR_SEARCH_STRING_[] = " -.0123456789ABCDEFGHIJLNOPRSTUY";
@@ -93,7 +93,7 @@ void sevenSegmentScreenShifted::setText(char* text)
             {
                 bitClear(this->displaySegmentBytes[digitNum - 1], 0); // That's only a dot. So we apply it to previous character. 
                 
-                digitNum++; // Since it'a dot, we'll have to iterate tis symbol one more time
+                i++; // Since it'a dot, we'll have to iterate tis symbol one more time
                 continue; 
             }
 
@@ -101,7 +101,7 @@ void sevenSegmentScreenShifted::setText(char* text)
             
             if (segByte == (byte)text[i])
             { 
-                this->displaySegmentBytes[digitNum] = pgm_read_byte(&numberSegmentsFont[j]);                
+                this->displaySegmentBytes[digitNum] = pgm_read_byte(&numberSegmentsFont[j]);           
             }
         }
 
@@ -111,16 +111,14 @@ void sevenSegmentScreenShifted::setText(char* text)
 
     // Shift out this->displaySegmentBytes[] to SN74HC165N registers to make our screen glow!
     // Again, we are making all bits inverted if we use a common cathode display
-    for (byte j = 0; j < this->numDigits; j++)
+    for (byte j = this->numDigits; j > 0; j--)
     {
         digitalWrite(this->latchPin, LOW);
             
         if (this->commonPin == COMMON_ANODE)
-            for (byte i = 0; i < this->numDigits; i++)
-                shiftOut(this->dataPin, this->clockPin, LSBFIRST, this->displaySegmentBytes[j]);
+            shiftOut(this->dataPin, this->clockPin, LSBFIRST, this->displaySegmentBytes[j - 1]);
         else    
-            for (byte i = 0; i < this->numDigits; i++)
-                shiftOut(this->dataPin, this->clockPin, LSBFIRST, ~this->displaySegmentBytes[j]);
+            shiftOut(this->dataPin, this->clockPin, LSBFIRST, ~this->displaySegmentBytes[j - 1]);
 
         digitalWrite(this->latchPin, HIGH);
     }
