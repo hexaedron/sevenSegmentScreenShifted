@@ -7,7 +7,7 @@
 // We use these to handle the final array lengths correctly
 // in both cases:
 // 1. We define ENABLE_UNPRINTABLE_CHARS
-// 2. We don't define ENABLE_UNPRINTABLE_CHARS and thus save 7 or PROGMEM bytes
+// 2. We don't define ENABLE_UNPRINTABLE_CHARS and thus save 7 or 21 bytes
 //    depending on what font variant (default or ALPHANUMERIC_ONLY) we use.
 #if !defined(ENABLE_UNPRINTABLE_CHARS)
     #define UNPRINTABLE_CHARS_FULL 21

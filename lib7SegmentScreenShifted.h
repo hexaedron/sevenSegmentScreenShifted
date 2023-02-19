@@ -8,7 +8,7 @@
 
 #if !(defined(NUMBERS_ONLY) || defined(ALPHANUMERIC_ONLY))
     #define _CHAR_SEARCH_STRING_LENGTH_ 49
-    const char PROGMEM _CHAR_SEARCH_STRING_[] = " -.0123456789ABCDEFGHIJLNOPRSTUYï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
+    const char PROGMEM _CHAR_SEARCH_STRING_[] = " -.0123456789ABCDEFGHIJLNOPRSTUYÀÁÂÃÄÅÇÈËÍÎÏÐÑÓ×Ý";
 #elif (!defined NUMBERS_ONLY) && (defined ALPHANUMERIC_ONLY)
     #define _CHAR_SEARCH_STRING_LENGTH_ 32
     const char PROGMEM _CHAR_SEARCH_STRING_[] = " -.0123456789ABCDEFGHIJLNOPRSTUY";
@@ -28,14 +28,18 @@ private:
     byte clockPin;
     byte numDigits;
     bool commonPin;
+    byte pwmPin = 255;
     byte* displaySegmentBytes;
 public:
     sevenSegmentScreenShifted(byte latchPin, byte dataPin, byte clockPin, byte numDigits, bool common);
+    sevenSegmentScreenShifted(byte latchPin, byte dataPin, byte clockPin, byte pwmPin, byte numDigits, bool common);
     void clear(void);
-    void setText(char* text);
+    void setText(const char* text);
+    void setBrightness (byte brightness);
     ~sevenSegmentScreenShifted();
 };
 
+// Simple constructor
 sevenSegmentScreenShifted::sevenSegmentScreenShifted(byte latchPin, byte dataPin, byte clockPin, byte numDigits, bool common = COMMON_ANODE)
 {
     this->latchPin  =  latchPin;
@@ -44,6 +48,19 @@ sevenSegmentScreenShifted::sevenSegmentScreenShifted(byte latchPin, byte dataPin
     this->numDigits = numDigits;
     this->commonPin =    common;
 
+    this->displaySegmentBytes = new byte[this->numDigits];
+}
+
+// Constructor with PWM mode
+sevenSegmentScreenShifted::sevenSegmentScreenShifted(byte latchPin, byte dataPin, byte clockPin, byte pwmPin, byte numDigits, bool common)
+{
+    this->latchPin  =  latchPin;
+    this->dataPin   =   dataPin;
+    this->clockPin  =  clockPin;
+    this->numDigits = numDigits;
+    this->pwmPin    =    pwmPin;
+    this->commonPin =    common;
+    
     this->displaySegmentBytes = new byte[this->numDigits];
 }
 
@@ -70,7 +87,7 @@ void sevenSegmentScreenShifted::clear(void)
 
 // Here we parse the input text and set it to the shift register
 // just making all bits inverted if we use a common cathode display
-void sevenSegmentScreenShifted::setText(char* text)
+void sevenSegmentScreenShifted::setText(const char* text)
 {
     byte i = 0;
     byte digitNum = 0;
@@ -109,7 +126,7 @@ void sevenSegmentScreenShifted::setText(char* text)
         i++;
     } while ((text[i] != '\0') || (digitNum < this->numDigits));
 
-    // Shift out this->displaySegmentBytes[] to SN74HC165N registers to make our screen glow!
+    // Shift out this->displaySegmentBytes[] to 74HC595 registers to make our screen glow!
     // Again, we are making all bits inverted if we use a common cathode display
     for (byte j = this->numDigits; j > 0; j--)
     {
@@ -121,5 +138,18 @@ void sevenSegmentScreenShifted::setText(char* text)
             shiftOut(this->dataPin, this->clockPin, LSBFIRST, ~this->displaySegmentBytes[j - 1]);
 
         digitalWrite(this->latchPin, HIGH);
+    }
+}
+
+// We set brightness using one more pin for PWM. Just connect it to
+// each 74HC595's OE pin. In case of a common cathode we invert the brightness
+void sevenSegmentScreenShifted::setBrightness (byte brightness)
+{
+    if(this->pwmPin != 255)
+    {
+        if(this->commonPin == COMMON_ANODE)
+            analogWrite(this->pwmPin, 255 - brightness);
+        else
+            analogWrite(this->pwmPin, brightness);
     }
 }
