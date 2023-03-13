@@ -30,12 +30,14 @@ private:
     bool commonPin;
     byte pwmPin = 255;
     byte* displaySegmentBytes;
+    byte brightness;
 public:
     sevenSegmentScreenShifted(byte latchPin, byte dataPin, byte clockPin, byte numDigits, bool common);
     sevenSegmentScreenShifted(byte latchPin, byte dataPin, byte clockPin, byte pwmPin, byte numDigits, bool common);
     void clear(void);
     void setText(const char* text);
     void setBrightness (byte brightness);
+    byte getBrightness(void);
     ~sevenSegmentScreenShifted();
 };
 
@@ -143,13 +145,19 @@ void sevenSegmentScreenShifted::setText(const char* text)
 
 // We set brightness using one more pin for PWM. Just connect it to
 // each 74HC595's OE pin. In case of a common cathode we invert the brightness
-void sevenSegmentScreenShifted::setBrightness (byte brightness)
+void sevenSegmentScreenShifted::setBrightness (byte newBrightness)
 {
+    this->brightness = newBrightness;
     if(this->pwmPin != 255)
     {
         if(this->commonPin == COMMON_ANODE)
-            analogWrite(this->pwmPin, 255 - brightness);
+            analogWrite(this->pwmPin, 255 - newBrightness);
         else
-            analogWrite(this->pwmPin, brightness);
+            analogWrite(this->pwmPin, newBrightness);
     }
+}
+
+byte sevenSegmentScreenShifted::getBrightness(void)
+{
+    return(this->brightness);
 }

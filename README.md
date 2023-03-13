@@ -79,6 +79,7 @@ sevenSegmentScreenShifted CA56_GWA(LATCH, DATA, CLOCK, 4, COMMON_ANODE);
 If you want to print a dot, just pass the dot following the symbol you want to have one, see the examples:
 ```cpp
 CA56_GWA.setText("12.34\0");
+CA56_GWA.setText("-12.3\0");
 CA56_GWA.setText("1.2.3.4.\0");
 CA56_GWA.setText("D.O.T.\0");
 CA56_GWA.setText(" .A .B\0");
