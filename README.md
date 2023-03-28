@@ -5,10 +5,10 @@ A small Arduino library and font for 7-segment LED displays.
 This library is usable when you connect some simple 7-segment digits in a row using the 74HC595 registers.
 
 # How to install it?
-Just put both .h files into your include dir
+Just put both .h files into your include dir and .cpp file to your src dir
 
 # How to use it?
-First of all, connect all your digits to 74HC595 chips and connect 74HC595 chips together according to its datasheet. If you want to use the brighntess control, you need one more PWM pin in your Arduino.
+First of all, connect all your digits to 74HC595 chips and connect 74HC595 chips together according to their datasheet. If you want to use the brighntess control, you need one more PWM pin in your Arduino.
 
 Please see an example (please note it is in PlatformIO style, no setup() and loop(), but of course you can use them):
 
