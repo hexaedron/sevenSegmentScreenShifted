@@ -43,22 +43,22 @@ int main(int argc, char **argv)
         CA56_GWA.clear();
 
         // Set text
-        CA56_GWA.setText("HI\0");
+        CA56_GWA.setText("HI");
         delay(1000); 
         CA56_GWA.clear();   
         
         // Set text
-        CA56_GWA.setText("GYUS\0");
+        CA56_GWA.setText("GYUS");
         delay(1000); 
         CA56_GWA.clear();
 
         // Set text
-        CA56_GWA.setText("LET.S\0");
+        CA56_GWA.setText("LET.S");
         delay(1000);
         CA56_GWA.clear(); 
 
         // Set text
-        CA56_GWA.setText("HAUE\0");
+        CA56_GWA.setText("HAUE");
         delay(1000); 
         CA56_GWA.clear();
 
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
         CA56_GWA.setBrightness(255);
 
         // Set text
-        CA56_GWA.setText("BEER\0");
+        CA56_GWA.setText("BEER");
         delay(2000); 
     }
 ```
@@ -78,11 +78,11 @@ sevenSegmentScreenShifted CA56_GWA(LATCH, DATA, CLOCK, 4, COMMON_ANODE);
 
 If you want to print a dot, just pass the dot following the symbol you want to have one, see the examples:
 ```cpp
-CA56_GWA.setText("12.34\0");
-CA56_GWA.setText("-12.3\0");
-CA56_GWA.setText("1.2.3.4.\0");
-CA56_GWA.setText("D.O.T.\0");
-CA56_GWA.setText(" .A .B\0");
+CA56_GWA.setText("12.34");
+CA56_GWA.setText("-12.3");
+CA56_GWA.setText("1.2.3.4.");
+CA56_GWA.setText("D.O.T.");
+CA56_GWA.setText(" .A .B");
 ```
 
 All the symbols you pass to `setText` have to be in uppercase. All the symbols which are not present in the font (`lib7segmentfont.h`), will be changed to a blank space. 
@@ -90,8 +90,8 @@ All the symbols you pass to `setText` have to be in uppercase. All the symbols w
 Bad examples (please don't do that):
 ```cpp
 CA56_GWA.setText("");
-CA56_GWA.setText("\0");
-CA56_GWA.setText(".1\0");
+CA56_GWA.setText("");
+CA56_GWA.setText(".1");
 ```
 
 
@@ -106,6 +106,6 @@ Remember to save all your files containing Cyrillic letters in Windows-1251 enco
 
 Cyrillic examples:
 ```cpp
-CA56_GWA.setText("ГДЕ\0");
-CA56_GWA.setText("Н.Л.О.\0");
+CA56_GWA.setText("ГДЕ");
+CA56_GWA.setText("Н.Л.О.");
 ```
