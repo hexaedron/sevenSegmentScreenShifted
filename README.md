@@ -90,7 +90,7 @@ All the symbols you pass to `setText` have to be in uppercase. All the symbols w
 Bad examples (please don't do that):
 ```cpp
 CA56_GWA.setText("");
-CA56_GWA.setText("");
+CA56_GWA.setText("\0");
 CA56_GWA.setText(".1");
 ```
 
